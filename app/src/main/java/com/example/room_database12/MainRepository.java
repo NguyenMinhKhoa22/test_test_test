@@ -36,6 +36,7 @@ public class MainRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                mainDatabase.mainDao().updateMainEntity(mainEntity);
                 return null;
             }
         }.execute();
@@ -45,6 +46,7 @@ public class MainRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                mainDatabase.mainDao().deleteMainEntity(mainEntity);
                 return null;
             }
         }.execute();

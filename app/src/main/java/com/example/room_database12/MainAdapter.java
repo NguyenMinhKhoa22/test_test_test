@@ -16,14 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.core.view.LayoutInflaterFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
 
 
-    private List<MainEntity> mainEntityList;
+    private List<MainEntity> mainEntityList = new ArrayList<>();
     private Context context_main;
+    private MainAdapterListener listener;
+
+    interface MainAdapterListener {
+        void onDelete(MainEntity entity);
+        void onEdit(MainEntity entity);
+    }
+
+    public void setListener(MainAdapterListener listener){
+        this.listener = listener;
+    }
 
     //Constructor
     public MainAdapter() {
@@ -65,68 +76,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         holder.img_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 MainEntity d = mainEntityList.get(holder.getAdapterPosition());
-
-                // CREATE DIALOG
-                Dialog dialog = new Dialog(context_main);
-                // SET CONTENT VIEW
-                dialog.setContentView(R.layout.dialog_edit);
-
-                /////
-                EditText edt_stringOne_dialog = dialog.findViewById(R.id.dialog_stringOne_edit);
-                EditText edt_stringTwo_dialog = dialog.findViewById(R.id.dialog_stringTwo_edit);
-                TextView tv_click_ok_edit = dialog.findViewById(R.id.tv_btn_OK_dialog_edit);
-
-                // GET TEXt 1 and 2
-                String textOne = d.getStringone();
-                String textTwo = d.getStringtwo();
-
-
-                // SET TEXT ON EDIT TEXT
-                edt_stringOne_dialog.setText(textOne);
-                edt_stringTwo_dialog.setText(textTwo);
-
-                tv_click_ok_edit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-
-                        // GET UPDATED TEXT FROM EDIT TEXT
-                        String uTextOne = edt_stringOne_dialog.getText().toString().trim();
-                        String uTextTwo = edt_stringTwo_dialog.getText().toString().trim();
-
-                      // UPDATE TEXT IN DATABASE
-
-                        // :V HELP ANH ƠI
-
-
-                    }
-                });
-
-                // SHOW DIALOG
-                dialog.show();
-
+                listener.onEdit(d);
             }
         });
 
         holder.img_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context_main);
-                dialog.setContentView(R.layout.dialog_delete);
-                TextView tv_ok_del_dialog = dialog.findViewById(R.id.tv_btn_OK_DELETE_DIALOG);
-                tv_ok_del_dialog.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                                        // DELETE TEXT FROM DATABASE
-               
-                    }
-                });
-
-            dialog.show();
-
-
+                MainEntity d = mainEntityList.get(holder.getAdapterPosition());
+                listener.onDelete(d);
             }
         });
     }
